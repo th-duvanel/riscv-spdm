@@ -16,7 +16,7 @@ First, you need some dependencies:
 ```bash
 $ chmod +x *.sh
 $ sudo ./deps.sh
-$ ./env.sh
+$ . ./env.sh
 ```
 
 Run a make that will do everything for you.
@@ -31,7 +31,7 @@ $  make
 For the qemu emulation, run in this order:
 ```bash
 $ sudo ./newdisk.sh
-$ ./run.sh -hd
+$ ./run.sh
 ```
 
 ## Tested in
