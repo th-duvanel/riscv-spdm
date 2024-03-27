@@ -18,6 +18,7 @@ broot:
 	$(MAKE) -C buildroot/ qemu_riscv64_virt_defconfig BR2_JLEVEL=${NPROC}
 	$(MAKE) -C buildroot/ BR2_JLEVEL=${NPROC}
 
+
 spdm: check-cross-compile
 	if [ ! -d ${SPDM_DIR}/build_host ] ; then mkdir ${SPDM_DIR}/build_host ; fi
 	if [ ! -d ${SPDM_BUILD_DIR} ] ; then mkdir ${SPDM_BUILD_DIR} ; fi
@@ -31,6 +32,7 @@ qemu-config:
 
 emulator: qemu-config
 	cd ${WORKSPACE}/qemu/build ; make -j${NPROC} ; cd ${WORKSPACE}
+	cp ${WORKSPACE}/files/qemu/virtio-blk.c ${WORKSPACE}/qemu/hw/block/virtio-blk.c 
 	if [ ! -e ${WORKSPACE}/ecp384 ] ; then ln -s ${SPDM_DIR}/build_host/bin/ecp384 ; fi
 	if [ ! -e ${WORKSPACE}/rsa3072 ] ; then ln -s ${SPDM_DIR}/build_host/bin/rsa3072 ; fi
 
@@ -39,7 +41,7 @@ linux-rebuild: check-cross-compile
 
 uboot: check-cross-compile
 	if [ ! -e ${WORKSPACE}/u-boot/.config ] ; then $(MAKE) -C u-boot/ CROSS_COMPILE=${CC_RISCV64} qemu-riscv64_smode_defconfig -j${NPROC}; fi
-	cp files/u-boot/config u-boot/.config
+	cp ${WORKSPACE}/files/u-boot/config ${WORKSPACE}/u-boot/.config
 	$(MAKE) -C u-boot/ CROSS_COMPILE=${CC_RISCV64} SPDM_DIR=${SPDM_DIR} SPDM_BUILD_DIR=${SPDM_BUILD_DIR} -j${NPROC}
 
 opensbi: check-cross-compile check-uboot
