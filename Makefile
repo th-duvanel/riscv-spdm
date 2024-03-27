@@ -5,13 +5,7 @@ CLEANERS=buildroot-clean opensbi-clean uboot-clean qemu-clean libspdm-clean
 	all broot clean linux-rebuild opensbi uboot check-cross-compile ${CLEANERS}
 	check-uboot payload qemu-config emulator spdm
 
-all: broot spdm qemu payload disk
-
-deps:
-	$(shell ./env.sh)
-
-disk:
-	$(shell ./newdisk.sh)
+all: broot spdm qemu payload
 
 broot:
 	$(MAKE) -C buildroot/ distclean
@@ -30,7 +24,7 @@ qemu-config:
 	if [ ! -d ${WORKSPACE}/qemu/build ] ; then mkdir ${WORKSPACE}/qemu/build ; fi
 	cd ${WORKSPACE}/qemu/build ; ../configure --target-list=riscv64-softmmu --enable-gtk --enable-system --enable-virtfs --enable-sdl --enable-nettle --disable-pie --enable-debug --disable-werror --enable-jemalloc --enable-slirp --enable-libspdm --libspdm-srcdir=${SPDM_DIR} --libspdm-builddir=${SPDM_DIR}/build_host --libspdm-crypto=mbedtls --extra-cflags='-fPIC --coverage -fprofile-arcs -ftest-coverage' --extra-ldflags='-lgcov' ;	cd ${WORKSPACE}
 
-emulator: qemu-config
+qemu: qemu-config
 	cd ${WORKSPACE}/qemu/build ; make -j${NPROC} ; cd ${WORKSPACE}
 	cp ${WORKSPACE}/files/qemu/virtio-blk.c ${WORKSPACE}/qemu/hw/block/virtio-blk.c 
 	if [ ! -e ${WORKSPACE}/ecp384 ] ; then ln -s ${SPDM_DIR}/build_host/bin/ecp384 ; fi

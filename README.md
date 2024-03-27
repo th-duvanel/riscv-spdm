@@ -11,27 +11,26 @@ Then, you can read those packets with Wireshark, using the SPDM-WID dissector.
 
 ## Initial Configuration
 
-Firstly, initialize the submodules.
+First, you need some dependencies:
 
 ```bash
-$ git submodule update --init --recursive
+$ chmod +x *.sh
+$ sudo ./deps.sh
+$ ./env.sh
 ```
 
-Now, run a make that will do everything for you.
+Run a make that will do everything for you.
+SPOILER: it will take some time. Be patient.
 
 ```bash
-$ make
+$  make
 ```
 
 # Running
 
-For the sniffer running, run:
+For the qemu emulation, run in this order:
 ```bash
-$ ./sniffer
-```
-
-For the qemu emulation, run:
-```bash
+$ sudo ./newdisk.sh
 $ ./run.sh -hd
 ```
 

@@ -1,32 +1,32 @@
 #!/bin/bash
 
 dd if=/dev/zero of=disk.img bs=1M count=128
-sudo parted disk.img mklabel gpt
+parted disk.img mklabel gpt
 
-i=$(sudo losetup --find --show disk.img)
+i=$(losetup --find --show disk.img)
 
 
-sudo parted --align minimal ${i} mkpart primary ext4 0% 50%
-sudo parted --align minimal ${i} mkpart primary ext4 50% 100%
-sudo mkfs.ext4 ${i}p1
-sudo mkfs.ext4 ${i}p2
-sudo parted ${i} set 1 boot on
-sudo mkdir /mnt/boot
-sudo mkdir /mnt/rootfs
-sudo mkdir /mnt/buildroot
+parted --align minimal ${i} mkpart primary ext4 0% 50%
+parted --align minimal ${i} mkpart primary ext4 50% 100%
+mkfs.ext4 ${i}p1
+mkfs.ext4 ${i}p2
+parted ${i} set 1 boot on
+mkdir /mnt/boot
+mkdir /mnt/rootfs
+mkdir /mnt/buildroot
 j=$(sudo losetup --find --show /home/duvanel/git/riscv-spdm/buildroot/output/images/rootfs.ext2)
 
 
-sudo mount ${j} /mnt/buildroot
-sudo mount ${i}p1 /mnt/boot
-sudo mount ${i}p2 /mnt/rootfs
-sudo cp /home/duvanel/git/riscv-spdm/buildroot/output/images/Image /mnt/boot
-sudo cp /mnt/buildroot/* /mnt/rootfs
+mount ${j} /mnt/buildroot
+mount ${i}p1 /mnt/boot
+mount ${i}p2 /mnt/rootfs
+cp /home/duvanel/git/riscv-spdm/buildroot/output/images/Image /mnt/boot
+cp /mnt/buildroot/* /mnt/rootfs
 
 
-sudo umount /mnt/boot
-sudo umount /mnt/rootfs
-sudo umount /mnt/buildroot
-sudo losetup -d ${i}
-sudo losetup -d ${j}
-sudo rm -rf /mnt/*
+umount /mnt/boot
+umount /mnt/rootfs
+umount /mnt/buildroot
+losetup -d ${i}
+losetup -d ${j}
+rm -rf /mnt/*
