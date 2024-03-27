@@ -9,7 +9,7 @@ export SPDM_DIR=$WORKSPACE/libspdm
 export SPDM_BUILD_DIR=$SPDM_DIR/build_uboot
 export PATH="$PATH:$WORKSPACE/buildroot/output/host/bin"
 
-if [ `uname -m` == "x86_64" ]
+if [ "$(uname -m)" = "x86_64" ]
 then
     export HOST_ARCH="x64"
 else

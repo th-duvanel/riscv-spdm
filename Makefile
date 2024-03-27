@@ -5,24 +5,16 @@ CLEANERS=buildroot-clean opensbi-clean uboot-clean qemu-clean libspdm-clean
 	all broot clean linux-rebuild opensbi uboot check-cross-compile ${CLEANERS}
 	check-uboot payload qemu-config emulator spdm
 
-check-uboot:
-	@echo "Checking if u-boot.bin exists..."
-ifneq ($(wildcard ${WORKSPACE}/u-boot/u-boot.bin),)
-	@echo "u-boot.bin exists"
-else
-	@echo "Error: u-boot.bin wasn't found. Compile u-boot first."; exit 2
-endif
+all: broot spdm qemu payload disk
 
-check-cross-compile:
-	@echo "Checking if cross compiler exists..."
-ifneq ("$(wildcard ${CC_RISCV64}*)","")
-	@echo "Cross compiler exists"
-else
-	@echo "Error: riscv64-linux- wasn't found. Compile buildroot first."; exit 2
-endif
+deps:
+	$(shell ./env.sh)
+
+disk:
+	$(shell ./newdisk.sh)
 
 broot:
-	if [ -d ${WORKSPACE}/buildroot/output ] ; then echo "Buildroot has an 'output' folder, if you want to force compilation run 'make buildroot-clean' and then 'make buildroot'" && exit 1 ; fi
+	$(MAKE) -C buildroot/ distclean
 	$(MAKE) -C buildroot/ qemu_riscv64_virt_defconfig BR2_JLEVEL=${NPROC}
 	$(MAKE) -C buildroot/ BR2_JLEVEL=${NPROC}
 
@@ -47,6 +39,7 @@ linux-rebuild: check-cross-compile
 
 uboot: check-cross-compile
 	if [ ! -e ${WORKSPACE}/u-boot/.config ] ; then $(MAKE) -C u-boot/ CROSS_COMPILE=${CC_RISCV64} qemu-riscv64_smode_defconfig -j${NPROC}; fi
+	cp files/u-boot/config u-boot/.config
 	$(MAKE) -C u-boot/ CROSS_COMPILE=${CC_RISCV64} SPDM_DIR=${SPDM_DIR} SPDM_BUILD_DIR=${SPDM_BUILD_DIR} -j${NPROC}
 
 opensbi: check-cross-compile check-uboot
@@ -56,7 +49,21 @@ payload:
 	$(MAKE) uboot
 	$(MAKE) opensbi
 
-all: broot spdm qemu payload
+check-uboot:
+	@echo "Checking if u-boot.bin exists..."
+ifneq ($(wildcard ${WORKSPACE}/u-boot/u-boot.bin),)
+	@echo "u-boot.bin exists"
+else
+	@echo "Error: u-boot.bin wasn't found. Compile u-boot first."; exit 2
+endif
+
+check-cross-compile:
+	@echo "Checking if cross compiler exists..."
+ifneq ("$(wildcard ${CC_RISCV64}*)","")
+	@echo "Cross compiler exists"
+else
+	@echo "Error: riscv64-linux- wasn't found. Compile buildroot first."; exit 2
+endif
 
 buildroot-clean:
 	$(MAKE) -C buildroot/ distclean
