@@ -8,7 +8,7 @@ CLEANERS=buildroot-clean opensbi-clean uboot-clean qemu-clean libspdm-clean
 all: broot spdm qemu payload
 
 broot:
-	$(MAKE) -C buildroot/ distclean
+	if [ -d ${WORKSPACE}/buildroot/output ] ; then $(MAKE) -C buildroot/ distclean ; fi
 	$(MAKE) -C buildroot/ qemu_riscv64_virt_defconfig BR2_JLEVEL=${NPROC}
 	$(MAKE) -C buildroot/ BR2_JLEVEL=${NPROC}
 
@@ -25,8 +25,8 @@ qemu-config:
 	cd ${WORKSPACE}/qemu/build ; ../configure --target-list=riscv64-softmmu --enable-gtk --enable-system --enable-virtfs --enable-sdl --enable-nettle --disable-pie --enable-debug --disable-werror --enable-jemalloc --enable-slirp --enable-libspdm --libspdm-srcdir=${SPDM_DIR} --libspdm-builddir=${SPDM_DIR}/build_host --libspdm-crypto=mbedtls --extra-cflags='-fPIC --coverage -fprofile-arcs -ftest-coverage' --extra-ldflags='-lgcov' ;	cd ${WORKSPACE}
 
 qemu: qemu-config
-	cd ${WORKSPACE}/qemu/build ; make -j${NPROC} ; cd ${WORKSPACE}
 	cp ${WORKSPACE}/files/qemu/virtio-blk.c ${WORKSPACE}/qemu/hw/block/virtio-blk.c 
+	cd ${WORKSPACE}/qemu/build ; make -j${NPROC} ; cd ${WORKSPACE}
 	if [ ! -e ${WORKSPACE}/ecp384 ] ; then ln -s ${SPDM_DIR}/build_host/bin/ecp384 ; fi
 	if [ ! -e ${WORKSPACE}/rsa3072 ] ; then ln -s ${SPDM_DIR}/build_host/bin/rsa3072 ; fi
 
@@ -34,8 +34,8 @@ linux-rebuild: check-cross-compile
 	$(MAKE) -C buildroot/ linux-rebuild BR2_JLEVEL=${NPROC}
 
 uboot: check-cross-compile
-	if [ ! -e ${WORKSPACE}/u-boot/.config ] ; then $(MAKE) -C u-boot/ CROSS_COMPILE=${CC_RISCV64} qemu-riscv64_smode_defconfig -j${NPROC}; fi
 	cp ${WORKSPACE}/files/u-boot/config ${WORKSPACE}/u-boot/.config
+	if [ ! -e ${WORKSPACE}/u-boot/.config ] ; then $(MAKE) -C u-boot/ CROSS_COMPILE=${CC_RISCV64} qemu-riscv64_smode_defconfig -j${NPROC}; fi
 	$(MAKE) -C u-boot/ CROSS_COMPILE=${CC_RISCV64} SPDM_DIR=${SPDM_DIR} SPDM_BUILD_DIR=${SPDM_BUILD_DIR} -j${NPROC}
 
 opensbi: check-cross-compile check-uboot

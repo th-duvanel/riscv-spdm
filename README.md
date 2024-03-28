@@ -19,7 +19,35 @@ $ sudo ./deps.sh
 $ . ./env.sh
 ```
 
-Run a make that will do everything for you.
+If you don't want to use sudo, you need these dependencies (in APT):
+
+```bash
+make 
+gcc 
+file 
+g++ 
+wget 
+unzip 
+cpio 
+rsync 
+bc 
+bzip2 
+cmake 
+libglib2.0-dev 
+libsdl2-dev 
+libpixman-1-dev 
+nettle-dev 
+libgtk-3-dev 
+libjemalloc-dev 
+libcap-ng-dev 
+libattr1-dev 
+libssl-dev
+parted
+```
+
+Feel free to download them, but you still need to run the deps.sh script. There are some git submodules ahd checkouts.
+
+Then, run a make that will do everything for you.
 SPOILER: it will take some time. Be patient.
 
 ```bash

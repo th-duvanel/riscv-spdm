@@ -2,7 +2,6 @@
 
 git submodule update --init --recursive
 
-cd riscv-spdm
 cd buildroot
 git checkout 2023.08
 
@@ -19,27 +18,29 @@ git checkout dc48779a5b8c9199b01549311922e05429af2a0e
 git am -3 --keep-cr --ignore-space-change ../patches/libspdm/*.patch
 
 
-apt install -y make \
-               gcc \
-               file \
-               g++ \
-               wget \
-               unzip \
-               cpio \
-               rsync \
-               bc \
-               bzip2 \ 
-               cmake \
-               libglib2.0-dev \
-               libsdl2-dev \
-               libpixman-1-dev \
-               nettle-dev \
-               libgtk-3-dev \
-               libjemalloc-dev \
-               libcap-ng-dev \
-               libattr1-dev \
-               libssl-dev \
-               parted
+
+apt-get install -y make \
+                    gcc \
+                    file \
+                    g++ \
+                    wget \
+                    unzip \
+                    cpio \
+                    rsync \
+                    bc \
+                    bzip2 \
+                    cmake \
+                    libglib2.0-dev \
+                    libsdl2-dev \
+                    libpixman-1-dev \
+                    nettle-dev \
+                    libgtk-3-dev \
+                    libjemalloc-dev \
+                    libcap-ng-dev \
+                    libattr1-dev \
+                    libssl-dev \
+                    parted
+
                 
 
 exit 0
