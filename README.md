@@ -14,14 +14,6 @@ Then, you can read those packets with Wireshark, using the SPDM-WID dissector.
 First, you need some dependencies:
 
 ```bash
-$ chmod +x *.sh
-$ sudo ./deps.sh
-$ . ./env.sh
-```
-
-If you don't want to use sudo, you need these dependencies (in APT):
-
-```bash
 make 
 gcc 
 file 
@@ -45,21 +37,35 @@ libssl-dev
 parted
 ```
 
-Feel free to download them, but you still need to run the deps.sh script. There are some git submodules ahd checkouts.
-
-Then, run a make that will do everything for you.
-SPOILER: it will take some time. Be patient.
-
 ```bash
-$  make
+$ chmod +x *.sh
+$ . ./compile.sh
 ```
+I know, it is strange to have a Makefile in the repo and you have to use a shell script. But the Git repos have to compile themselves
+individually. If not, it can cause some unexpected errors, so, use the script above.
 
 # Running
 
 For the qemu emulation, run in this order:
 ```bash
-$ sudo ./newdisk.sh
+$ ./newdisk.sh
 $ ./run.sh
+```
+I'm sorry for the sudo newdisk.sh inside the own shell. It is because the compilation and environemnt variables aren't the same if you're running the
+script with and without it. If you want it, you can run it separetely.
+
+Now, run in this order:
+- (1th) The sniffer (server, echo, etc.), make sure you have the 2323 TCP port on
+```bash
+./sniffer
+```
+- (2th) Wireshark, with the dissector installed and filter "tcp.port == 2323 && tcp.flags.push == 1"
+```bash
+sudo wireshark
+```
+- (3th) The emulator
+```bash
+./run.sh
 ```
 
 ## Tested in
