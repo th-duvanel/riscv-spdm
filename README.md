@@ -39,7 +39,8 @@ parted
 
 ```bash
 $ chmod +x *.sh
-$ . ./compile.sh
+$ . ./env.sh
+$ ./compile.sh
 ```
 I know, it is strange to have a Makefile in the repo and you have to use a shell script. But the Git repos have to compile themselves
 individually. If not, it can cause some unexpected errors, so, use the script above.
@@ -53,6 +54,12 @@ $ ./run.sh
 ```
 I'm sorry for the sudo newdisk.sh inside the own shell. It is because the compilation and environemnt variables aren't the same if you're running the
 script with and without it. If you want it, you can run it separetely.
+
+If you restart your computer, you need to run again the environemnt variables:
+
+```bash
+$ . ./env.sh
+```
 
 Now, run in this order:
 - (1th) The sniffer (server, echo, etc.), make sure you have the 2323 TCP port on
