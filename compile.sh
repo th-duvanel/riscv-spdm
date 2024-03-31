@@ -28,3 +28,5 @@ make spdm
 make qemu
 
 make payload
+
+exit 0
