@@ -17,7 +17,6 @@ git checkout dc48779a5b8c9199b01549311922e05429af2a0e
 git am -3 --keep-cr --ignore-space-change ../patches/libspdm/*.patch
 cd ..
 
-. ./env.sh
 
 gcc -Wall -o sniffer sniffer.c
 
@@ -27,4 +26,8 @@ make spdm
 
 make qemu
 
-make payload
+make uboot
+
+make opensbi
+
+exit 0
