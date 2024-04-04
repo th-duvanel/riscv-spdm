@@ -26,6 +26,8 @@ make spdm
 
 make qemu
 
-make payload
+make uboot
+
+make opensbi
 
 exit 0
