@@ -7,13 +7,11 @@ CLEANERS=buildroot-clean opensbi-clean uboot-clean qemu-clean libspdm-clean
 
 all: broot spdm qemu uboot opensbi
 
-broot:payload:
-	$(MAKE) uboot
-	$(MAKE) opensbi
+
+broot:
 	$(MAKE) -C buildroot/ distclean
 	$(MAKE) -C buildroot/ qemu_riscv64_virt_defconfig
 	$(MAKE) -C buildroot/
-	
 
 
 spdm: check-cross-compile
