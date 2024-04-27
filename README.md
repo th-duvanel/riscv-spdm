@@ -80,6 +80,37 @@ sudo wireshark
 ./run.sh
 ```
 
+## Possible erros
+
+Errors can occur on any type of software, principally on those ones that depends on other devs software.
+This repository happens to need a lot of dependencies, which can be malformed or not compilled properly. The script that you use to compile riscv-spdm will tell if there is something missing, like a binarie or a folder.
+
+For example:
+
+```bash
+[th-duvanel@~/spdm-wid/riscv-spdm]
+./compile.sh
+Error: riscv64-linux- wasn't found. Compile buildroot first.
+```
+
+The error above is related to the riscv64 and buildroot, one of the emulation dependencies (all dependencies are important!), so, you can try to run it again, writing:
+
+```bash
+[th-duvanel@~/spdm-wid/riscv-spdm]
+make broot
+```
+
+Now that you understood, this table will show that for each error, there is a make command.
+If a make is not enough, probably you didn't have set the environment variables properly.
+
+| Error | Recommended command |
+|----------|----------|
+| riscv64 not found!   | make broot   |
+| u-boot not found!   | make uboot   |
+| other errors   | . ./env.sh   |
+| nothing above works   | make clean, RESTART!   |
+
+
 ## Tested in
 
 ```bash
