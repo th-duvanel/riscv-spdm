@@ -46,6 +46,10 @@ chmod +x *.sh
 I know, it is strange to have a Makefile in the repo and you have to use a shell script. But the Git repos have to compile themselves
 individually. If not, it can cause some unexpected errors, so, use the script above.
 
+In compile.sh, you will compile the C binary to receive the TCP packets sent by the QEMU, so Wireshark detect them
+properly and without any inconsistency UDP can bring.
+
+
 # Running
 
 For the qemu emulation, run the .sh to create a virtual disk:
