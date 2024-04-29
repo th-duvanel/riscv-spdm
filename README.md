@@ -1,8 +1,8 @@
 # RISC-V 64 bits with LibSPDM on QEMU
 
-This repository is a fork of an implementation of LibSPDM inside QEMU and Das U-Boot especifically for RISC-V 64 bits.
+This repository is a fork of an implementation of LibSPDM inside QEMU and Das U-Boot specifically for RISC-V 64 bits.
 Please, access the original project and give it a star.
-This is just a modification to proper run with a opened socket in VirtIO to export packets to an echo server in TCP port 2323
+This is just a modification to proper run with an opened socket in VirtIO to export packets to an echo server in TCP port 2323
 (spdm_sniffer.c).
 
 Then, you can read those packets with Wireshark, using the SPDM-WID dissector.
@@ -43,22 +43,19 @@ chmod +x *.sh
 . ./env.sh
 ./compile.sh
 ```
-I know, it is strange to have a Makefile in the repo and you have to use a shell script. But the Git repos have to compile themselves
-individually. If not, it can cause some unexpected errors, so, use the script above.
+I know, it is strange to have a Makefile in the repo and still have to use a shell script. This is because the Git repos (buildroot, qemu, etc.) have to compile themselves individually, calling recursively their own Makefiles. If compiled together, some unexpected errors can appear, so, use the script above.
 
-In compile.sh, you will compile the C binary to receive the TCP packets sent by the QEMU, so Wireshark detect them
+In compile.sh, you will compile the C binary to receive the TCP packets sent by the QEMU, so Wireshark detects them
 properly and without any inconsistency UDP can bring.
 
 
-# Running
-
-For the qemu emulation, run the .sh to create a virtual disk:
+For the qemu emulation, you need to simulate the disk, so, use this shell script.
 ```bash
-[th-duvanel@~/riscv-spdm]
+[th-duvanel@~/spdm-wid/riscv-spdm]
 ./newdisk.sh
 ```
-I'm sorry for the sudo commands inside newdisk.sh. It is because the compilation and environemnt variables aren't the same if you're running the
-script with and without it. If you want it, you can run it separetely.
+I'm sorry for the sudo newdisk.sh inside the own shell. It is because the compilation and environment variables aren't the same if you're running the
+script with and without it. If you want it, you can open the .sh and run the commands separately.
 
 If you restart your computer, you need to run again the environemnt variables:
 
@@ -67,27 +64,29 @@ If you restart your computer, you need to run again the environemnt variables:
 . ./env.sh
 ```
 
-Now, run in this order:
-- (1th) The sniffer (server, echo, etc.), make sure you have the 2323 TCP port on
+# Running
+
+Now, run in this order, inside the riscv-spdm folder:
+- (1st) The sniffer (server, echo, etc.), make sure you have the 2323 TCP port on
 ```bash
-[th-duvanel@~/riscv-spdm]
+[th-duvanel@~/spdm-wid/riscv-spdm]
 ./sniffer
 ```
-- (2th) Wireshark, with the dissector installed and filter "tcp.port == 2323 && tcp.flags.push == 1"
+- (2nd) Wireshark, with the dissector installed and filter "tcp.port == 2323 && tcp.flags.push == 1"
 ```bash
-[th-duvanel@~/riscv-spdm]
+[th-duvanel@~/spdm-wid/riscv-spdm]
 sudo wireshark
 ```
 - (3th) The emulator
 ```bash
-[th-duvanel@~/riscv-spdm]
+[th-duvanel@~/spdm-wid/riscv-spdm]
 ./run.sh
 ```
 
-## Possible erros
+## Possible errors
 
-Errors can occur on any type of software, principally on those ones that depends on other devs software.
-This repository happens to need a lot of dependencies, which can be malformed or not compilled properly. The script that you use to compile riscv-spdm will tell if there is something missing, like a binarie or a folder.
+Errors can occur on any type of software, principally on those that depend on other devs software.
+This repository happens to need a lot of dependencies, which can be malformed or not compiled properly. The script that you use to compile riscv-spdm will tell if something is missing, like a binary or a folder.
 
 For example:
 
@@ -104,8 +103,8 @@ The error above is related to the riscv64 and buildroot, one of the emulation de
 make broot
 ```
 
-Now that you understood, this table will show that for each error, there is a make command.
-If a make is not enough, probably you didn't have set the environment variables properly.
+Now that you understand, this table will show that for each error, there is a make command.
+If a make is not enough, probably you didn't set the environment variables properly.
 
 | Error | Recommended command |
 |----------|----------|
